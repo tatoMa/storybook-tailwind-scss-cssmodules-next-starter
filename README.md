@@ -1,8 +1,89 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## This is a starter package using Storybook with Tailwind, scss, css modules and Next.js framework as frontend.
 
-## Getting Started
+### The packages/addons are needed to be installed with this starter are:
 
-First, run the development server:
+packages:
+
+- storybook
+- tailwindcss
+
+styles related packages:
+
+- postcss
+- scss
+
+storybook addons:
+
+- storybook-css-modules
+- @storybook/addon-postcss
+- storybook-addon-sass-postcss
+
+```javascript
+// /.storybook/main.js
+module.exports = {
+  stories: [
+    "../stories/**/*.stories.mdx",
+    "../stories/**/*.stories.@(js|jsx|ts|tsx)",
+  ],
+  addons: [
+    "@storybook/addon-links",
+    "@storybook/addon-essentials",
+    "@storybook/addon-interactions",
+    "storybook-css-modules",
+    {
+      name: "@storybook/addon-postcss",
+      options: {
+        postcssLoaderOptions: {
+          implementation: require("postcss"),
+        },
+      },
+    },
+    {
+      name: "storybook-addon-sass-postcss",
+      options: {
+        rule: {
+          test: /\.(scss|sass)$/i,
+        },
+        loadSassAfterPostCSS: true,
+      },
+    },
+  ],
+
+  framework: "@storybook/react",
+  core: {
+    builder: "@storybook/builder-webpack5",
+  },
+};
+```
+
+```javascript
+// /.storybook/preview.js
+import "../styles/globals.scss";
+export const parameters = {
+  actions: { argTypesRegex: "^on[A-Z].*" },
+  controls: {
+    matchers: {
+      color: /(background|color)$/i,
+      date: /Date$/,
+    },
+  },
+};
+```
+
+```css
+/* /style/global.scss */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "./_button"; /*what ever your component scss files you have using in this project */
+```
+
+## Don't forget to change all css to scss, all files extension and import.
+
+# Getting Started
+
+## First, run the development server:
 
 ```bash
 npm run dev
@@ -12,23 +93,12 @@ yarn dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## Second, run the storybook server:
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+```bash
+npm run storybook
+# or
+yarn storybook
+```
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Open [http://localhost:6006](http://localhost:6006) with your browser to see the result.
